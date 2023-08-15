@@ -1,10 +1,11 @@
 // React에서 필요한 기능들을 가져옴
-import { useEffect, useRef, useState } from 'react';
+import { useMemo, useEffect, useRef, useState } from 'react';
 // 스타일 파일을 가져옴
 import './App.css';
 // 두 개의 컴포넌트를 가져옴
 import DiaryEditor from './DiaryEditor';
 import DiaryList from './DiaryList';
+// import OptimizeTest from './OptimizeTest';
 // import Lifecycle from './Lifecycle';
 
 // https://jsonplaceholder.typicode.com/comments
@@ -23,7 +24,7 @@ const App = () => {
      const res = await fetch("https://jsonplaceholder.typicode.com/comments"
      ).then((res) => res.json());
      // console.log(res);
-     console.log(res.slice(0,20));
+    //  console.log(res.slice(0,20));
 
      const initData = res.slice(0, 20).map((it)=>{
        return {
@@ -63,7 +64,7 @@ const App = () => {
 
   // 특정 id를 가진 아이템을 제거하는 함수
   const onRemove = (targetId) => {
-    console.log(`${targetId}가 삭제되었습니다.`)
+   
     // 선택한 id를 제외한 새로운 리스트 생성
     const newDiaryList = data.filter((it)=>it.id !== targetId);
     // 상태 업데이트
@@ -80,12 +81,26 @@ const App = () => {
     );
   };
 
+  const getDiaryAnalysis = useMemo (() => {
+    const goodCount = data.filter((it)=>it.emotion >= 3).length;
+    const badCount = data.length - goodCount;
+    const goodRatio = (goodCount / data.length) * 100;
+    return {goodCount, badCount, goodRatio};
+  } , [data.length]);
+
+  const {goodCount, badCount, goodRatio} = getDiaryAnalysis;
+  
   // 컴포넌트를 렌더링
   return (
     <div className="App">
+      {/*<OptimizeTest />*/}
       {/*<Lifecycle />*/}
       {/* 다이어리 편집 컴포넌트 */}
       <DiaryEditor onCreate={onCreate}/>
+      <div>전체 일기 : {data.length}</div>
+      <div>기분 좋은 일기 개수 : {goodCount}</div>
+      <div>기분 나쁜 일기 개수 : {badCount}</div>
+      <div>기분 좋은 일기 비율 : {goodRatio}</div>
       {/* 다이어리 목록 컴포넌트 */}
       <DiaryList onEdit={onEdit} onRemove={onRemove} diaryList={data} />
     </div>
@@ -94,3 +109,4 @@ const App = () => {
 
 // App 컴포넌트를 다른 파일에서 사용할 수 있도록 export
 export default App;
+
