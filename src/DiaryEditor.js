@@ -1,7 +1,11 @@
 // 필요한 React 기능들을 가져옴
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
+import { DiaryDispatchContext } from "./App";
 
-const DiaryEditor = ({onCreate}) => {
+const DiaryEditor = () => {
+
+  const {onCreate} = useContext(DiaryDispatchContext);
+
 
   // 작성자와 내용 입력 필드에 직접 접근하기 위한 참조 변수
   const authorInput = useRef();
@@ -16,8 +20,8 @@ const DiaryEditor = ({onCreate}) => {
 
   // 인풋 필드의 값이 변경될 때 호출되는 함수
   const handleChangeState = (e) => {
-    console.log(e.target.name);
-    console.log(e.target.value); 
+    // console.log(e.target.name);
+    // console.log(e.target.value); 
 
     // 현재 상태에 변경된 값을 병합
     setState({
@@ -93,4 +97,4 @@ const DiaryEditor = ({onCreate}) => {
 };
 
 // DiaryEditor 컴포넌트를 다른 파일에서 사용할 수 있도록 export
-export default DiaryEditor;
+export default React.memo(DiaryEditor);

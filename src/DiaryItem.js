@@ -1,7 +1,10 @@
 // 필요한 React 기능들을 가져옴
-import {useRef, useState} from "react";
+import React, { useContext, useRef, useState} from "react";
+import { DiaryDispatchContext } from "./App";
 
-const DiaryItem = ({onEdit, onRemove, author, content, create_date, emotion, id}) => {
+const DiaryItem = ({author, content, create_date, emotion, id}) => {
+
+  const {onRemove, onEdit} = useContext(DiaryDispatchContext);
 
   // 수정 모드인지 아닌지를 결정하는 상태 (기본값: false)
   const [isEdit, setIsEdit] = useState(false);
@@ -81,4 +84,4 @@ const DiaryItem = ({onEdit, onRemove, author, content, create_date, emotion, id}
 
 
 // DiaryItem 컴포넌트를 다른 파일에서 사용할 수 있도록 export
-export default DiaryItem;
+export default React.memo(DiaryItem);
